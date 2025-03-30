@@ -1,5 +1,6 @@
 package arimayuji.eletiva.application.useacases;
 
+import arimayuji.eletiva.domain.exceptions.InvalidReviewValueRangeException;
 import arimayuji.eletiva.domain.gateways.MusicRepository;
 
 public class ReviewMusicUseCase {
@@ -11,6 +12,11 @@ public class ReviewMusicUseCase {
     }
 
     public void execute(String musicName, int review) {
+
+        if (review < 1 && review > 5) {
+            throw new InvalidReviewValueRangeException();
+        }
+        
         musicRepository.review(musicName, review);
     }
 }
