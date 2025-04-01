@@ -12,9 +12,9 @@ import arimayuji.eletiva.application.useacases.CreateMusicUseCase;
 import arimayuji.eletiva.application.useacases.GetAllMusicsUseCase;
 import arimayuji.eletiva.application.useacases.ReviewMusicUseCase;
 
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,7 +38,7 @@ public class MusicController {
         this.reviewMusicUseCase = reviewMusicUseCase;
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<MusicResponse> create(@RequestBody CreateMusicRequest body) {
 
         var result = createMusicUseCase.execute(body.musicName());
@@ -48,7 +48,7 @@ public class MusicController {
         return ResponseEntity.created(null).body(response);
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<GetAllMusicResponse> getAll() {
         var result = getAllMusicsUseCase.execute();
 
@@ -57,7 +57,7 @@ public class MusicController {
         return ResponseEntity.ok().body(response);
     }
 
-    @PostMapping("/{musicName}/review")
+    @PatchMapping("/{musicName}/review")
     public ResponseEntity<Void> review(@RequestBody ReviewMusicRequest body, @PathVariable String musicName) {
         reviewMusicUseCase.execute(musicName, body.review());
 
