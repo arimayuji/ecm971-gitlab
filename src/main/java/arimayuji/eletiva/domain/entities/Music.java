@@ -1,21 +1,24 @@
 package arimayuji.eletiva.domain.entities;
 
-import java.util.UUID;
-
 public class Music {
 
-    private UUID id;
+    private Long id;
 
     private String name;
 
     private int review = 0;
 
     public Music(String name) {
-        this.id = UUID.randomUUID();
         this.name = name;
     }
 
-    public UUID getId() {
+    public Music(Long id, String name, int review) {
+        this.id = id;
+        this.review = review;
+        this.name = name;
+    }
+
+    public Long getId() {
         return id;
     }
 
