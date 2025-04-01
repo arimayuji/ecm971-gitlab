@@ -1,6 +1,5 @@
 package arimayuji.eletiva.infra.repositories.jpa;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,13 +27,10 @@ public class JpaMusicRepository implements MusicRepository {
 
     @Override
     public List<Music> getAll() {
-        var result = repository.findAll();
+        var result = repository.findAllByOrderByReviewDescNameAsc();
 
         return result.stream()
                 .map(MusicMapper::toDomain)
-                .sorted(Comparator
-                        .comparing(Music::getName)
-                        .thenComparing(Comparator.comparing(Music::getReview).reversed()))
                 .toList();
     }
 
@@ -52,21 +48,16 @@ public class JpaMusicRepository implements MusicRepository {
     @Override
     public void review(String musicName, int rating) {
 
-        Optional<Music> result = getByName(musicName);
-
-        if (result.isEmpty()) {
-            throw new IllegalArgumentException("Música não encontrada");
-        }
+        JpaMusic entity = repository.findByName(musicName)
+                .orElseThrow(() -> new IllegalArgumentException("Música não encontrada"));
 
         if (rating < 0 || rating > 5) {
             throw new IllegalArgumentException("Nota inválida");
         }
 
-        Music music = result.get();
+        entity.setReview(rating);
 
-        music.setReview(rating);
-
-        repository.save(MusicMapper.fromDomain(music));
+        repository.save(entity);
     }
 
 }

@@ -16,16 +16,18 @@ public class MusicMapper {
         }
 
         return new Music(
-                entity.getName());
+                entity.getId(),
+                entity.getName(),
+                entity.getReview());
 
     }
 
-    public static JpaMusic fromDomain(Music Music) {
-        if (Music == null) {
+    public static JpaMusic fromDomain(Music music) {
+        if (music == null) {
             return null;
         }
 
-        return new JpaMusic(Music.getName());
+        return new JpaMusic(music.getName(), music.getReview());
     }
 
     public static List<Music> toDomainList(List<JpaMusic> entities) {
