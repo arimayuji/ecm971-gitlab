@@ -1,7 +1,5 @@
 package arimayuji.eletiva.infra.entities;
 
-import java.util.UUID;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +19,7 @@ public class JpaMusic {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
+    private Long id;
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;
@@ -36,6 +34,11 @@ public class JpaMusic {
 
     public JpaMusic(String name) {
         this.name = name;
+    }
+
+    public JpaMusic(String name, int review) {
+        this.name = name;
+        this.review = review;
     }
 
 }
