@@ -36,10 +36,10 @@ testa_ordenacao:
     - java -jar $JAR_FILE &
     - sleep 10
     - |
-      curl -X POST http://localhost:8080/api/music -H "Content-Type: application/json" -d '{"name": "Undone thing"}'
-      curl -X POST http://localhost:8080/api/music -H "Content-Type: application/json" -d '{"name": "One"}'
-      curl -X POST http://localhost:8080/api/music -H "Content-Type: application/json" -d '{"name": "Still"}'
-      curl -X POST http://localhost:8080/api/music -H "Content-Type: application/json" -d '{"name": "Uncover"}'
+      curl -X POST http://localhost:8080/api/music -H "Content-Type: application/json" -d '{"musicName": "Undone thing"}'
+      curl -X POST http://localhost:8080/api/music -H "Content-Type: application/json" -d '{"musicName": "One"}'
+      curl -X POST http://localhost:8080/api/music -H "Content-Type: application/json" -d '{"musicName": "Still"}'
+      curl -X POST http://localhost:8080/api/music -H "Content-Type: application/json" -d '{"musicName": "Uncover"}'
 
       curl -X PATCH http://localhost:8080/api/music/Undone%20thing/review -H "Content-Type: application/json" -d '{"review": 5}'
       curl -X PATCH http://localhost:8080/api/music/One/review -H "Content-Type: application/json" -d '{"review": 4}'
@@ -56,6 +56,6 @@ cadastra_musica:
     - java -jar $JAR_FILE &
     - sleep 10
     - |
-      curl -X POST http://localhost:8080/api/music -H "Content-Type: application/json" -d '{"name": "Nova Música"}' > output.json
+      curl -X POST http://localhost:8080/api/music -H "Content-Type: application/json" -d '{"musicName": "Nova Música"}' > output.json
       grep '"review":0' output.json
   needs: [build]
