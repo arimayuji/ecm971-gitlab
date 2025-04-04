@@ -1,0 +1,63 @@
+stages:
+  - build
+  - test
+
+variables:
+  JAR_FILE: target/*.jar
+
+build:
+  stage: build
+  image: maven:3.8.5-openjdk-17
+  script:
+    - mvn clean package -DskipTests
+  artifacts:
+    paths:
+      - target/*.jar
+    expire_in: 1 hour
+
+ping_pong:
+  stage: test
+  image: maven:3.8.5-openjdk-17
+  script:
+    - java -jar $JAR_FILE &
+    - sleep 10
+    - RESPONSE=$(curl --silent http://localhost:8080/api/ping)
+    - if [[ "$RESPONSE" != "pong" ]]; then
+        echo "Erro: Esperado 'pong', obtido '$RESPONSE'"
+        exit 1
+      fi
+  needs: [build]
+
+testa_ordenacao:
+  stage: test
+  image: maven:3.8.5-openjdk-17
+  script:
+    - java -jar $JAR_FILE &
+    - sleep 10
+
+    - curl -X POST http://localhost:8080/api/music -H "Content-Type: application/json" -d '{"name": "Undone thing"}'
+    - curl -X POST http://localhost:8080/api/music -H "Content-Type: application/json" -d '{"name": "One"}'
+    - curl -X POST http://localhost:8080/api/music -H "Content-Type: application/json" -d '{"name": "Still"}'
+    - curl -X POST http://localhost:8080/api/music -H "Content-Type: application/json" -d '{"name": "Uncover"}'
+
+    - curl -X PATCH http://localhost:8080/api/music/Undone%20thing/review -H "Content-Type: application/json" -d '{"review": 5}'
+    - curl -X PATCH http://localhost:8080/api/music/One/review -H "Content-Type: application/json" -d '{"review": 4}'
+    - curl -X PATCH http://localhost:8080/api/music/Still/review -H "Content-Type: application/json" -d '{"review": 3}'
+    - curl -X PATCH http://localhost:8080/api/music/Uncover/review -H "Content-Type: application/json" -d '{"review": 3}'
+
+    - RESPONSE=$(curl --silent http://localhost:8080/api/music)
+    - echo "$RESPONSE" | grep -q 'Undone thing'
+    - echo "$RESPONSE" | grep -q 'One'
+    - echo "$RESPONSE" | grep -q 'Still'
+    - echo "$RESPONSE" | grep -q 'Uncover'
+  needs: [build]
+
+cadastra_musica:
+  stage: test
+  image: maven:3.8.5-openjdk-17
+  script:
+    - java -jar $JAR_FILE &
+    - sleep 10
+    - curl -X POST http://localhost:8080/api/music -H "Content-Type: application/json" -d '{"name": "Nova Música"}' > output.json
+    - grep '"review":0' output.json
+  needs: [build]
