@@ -47,8 +47,7 @@ public class JpaMusicRepository implements MusicRepository {
 
     @Override
     public void review(String musicName, int rating) {
-
-        JpaMusic entity = repository.findByName(musicName)
+        JpaMusic entity = repository.findByNameIgnoreCase(musicName)
                 .orElseThrow(() -> new IllegalArgumentException("Música não encontrada"));
 
         if (rating < 0 || rating > 5) {
