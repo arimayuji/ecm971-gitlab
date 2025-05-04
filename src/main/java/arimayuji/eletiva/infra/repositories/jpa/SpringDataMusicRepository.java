@@ -13,4 +13,6 @@ public interface SpringDataMusicRepository extends JpaRepository<JpaMusic, Long>
 
     List<JpaMusic> findAllByOrderByReviewDescNameAsc();
 
+    Optional<JpaMusic> findByNameIgnoreCase(String name);
+
 }

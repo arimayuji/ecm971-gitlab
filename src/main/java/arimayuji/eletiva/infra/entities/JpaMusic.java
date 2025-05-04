@@ -41,4 +41,10 @@ public class JpaMusic {
         this.review = review;
     }
 
+    public void setReview(int review) {
+        if (review < 0 || review >= 10) {
+            throw new IllegalArgumentException("Nota inválida");
+        }
+        this.review = review;
+    }
 }
